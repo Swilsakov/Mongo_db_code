@@ -1,0 +1,356 @@
+#Смотрю какие БД у меня есть
+show dbs; & show databases;
+
+
+#С помощью use создаю БД и делаю коннект
+use mongo
+
+#Создаю коллекцию в БД
+db.createCollection('table')
+
+
+#Для удаление использую функцию dropDatabase()
+db.dropDatabase()
+
+#Заполняю свою БД значениями если добавляю одну запись использую insertOne()
+а много записей использую insertMany()
+db.mongo.insertMany([
+{name: 'azat', age: 20},
+{name: 'andrey', age:24},
+{name: 'azim', age:12},
+{name: 'denis', age: 21}])
+
+
+# Для просмотра записей внутри БД прописываю слудущий запрос.
+С помощью функции find()
+db.mongo.find()
+
+
+#Если хочу найти один обьект по опреленным критериям то указываю
+db.mongo.find({age:24})
+db.mongo.find({age:24, name: 'andrey'})
+
+#При нахождении несколько обьектов я использую следущую запись для этого служит
+операция $or(или) и вывожу двум критериям сразу. 
+db.mongo.find({$or:[{name: 'azat'}, {age:24}]})
+
+
+
+#Для того чтобы найти пользователя с возврастом больше или меньше 
+$lt(less then)-Меньше чем
+db.mongo.find({age:{$lt:30}})
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+{ _id: ObjectId("610b84bfd769dfcfae322c45"),
+  name: 'azim',
+  age: 12 }
+{ _id: ObjectId("610b84bfd769dfcfae322c46"),
+  name: 'denis',
+  age: 21 }
+
+#Или же хотим найти равен или меньше то мы пишем такую операцию $lte
+(less then equels)-Меньше или равен
+
+db.mongo.find({age:{$lte:30}})
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+{ _id: ObjectId("610b84bfd769dfcfae322c45"),
+  name: 'azim',
+  age: 12 }
+{ _id: ObjectId("610b84bfd769dfcfae322c46"),
+  name: 'denis',
+
+
+#Для того чтобы вывести человека  больше возраста от условий который мы задали
+то мы используем опреацию $gt(greater)-больше
+db.mongo.find({age:{$gt:21}})
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+
+#Что бы вывести больше или равно то мы используем операцию как $gte(greater eqels)
+db.mongo.find({age:{$gte:21}})
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+
+
+
+#Операция $ne(not equels) не равен 
+db.mongo.find({age:{$ne:21}})
+{ _id: ObjectId("610b82ebd769dfcfae322c41") }
+{ _id: ObjectId("610b8340d769dfcfae322c42"),
+  country: 'Tokyo',
+  cars: 'toyota' }
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+{ _id: ObjectId("610b84bfd769dfcfae322c45"),
+  name: 'azim',
+  age: 12 }
+
+
+
+#После функции find() мы можем используем функцию sort() Чтобы отсортировать 
+по возрастанию
+db.mongo.find().sort({age:1})
+{ _id: ObjectId("610b82ebd769dfcfae322c41") }
+{ _id: ObjectId("610b8340d769dfcfae322c42"),
+  country: 'Tokyo',
+  cars: 'toyota' }
+{ _id: ObjectId("610b84bfd769dfcfae322c45"),
+  name: 'azim',
+  age: 12 }
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+{ _id: ObjectId("610b84bfd769dfcfae322c46"),
+  name: 'denis',
+  age: 21 }
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+
+
+
+В Обратную сторону по убавлению
+
+db.mongo.find().sort({age:-1})
+{ _id: ObjectId("610b84bfd769dfcfae322c44"),
+  name: 'andrey',
+  age: 24 }
+{ _id: ObjectId("610b84bfd769dfcfae322c46"),
+  name: 'denis',
+  age: 21 }
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+{ _id: ObjectId("610b84bfd769dfcfae322c45"),
+  name: 'azim',
+  age: 12 }
+
+
+#Монго БД по умолчанию создает уникальный ID и он скажет чтобы мы для поиска
+одного обьекта должны использовать findOne()
+db.mongo.findOne({ _id: ObjectId("610b84bfd769dfcfae322c43")})
+{ _id: ObjectId("610b84bfd769dfcfae322c43"),
+  name: 'azat',
+  age: 20 }
+
+
+#Обновлять обьект в существуйщей БД используем функцию update()
+В начале указываем значение которую хотим поменять в с помощью $set для того чтобы
+заменить запись
+db.mongo.update( 
+{name: 'azim'},
+{ 
+$set: { 
+name: 'djeff bezos', 
+age: 50
+}
+}
+)
+
+
+#
+
+
+Когда изменяем несколькр записей то мы используем updateMany()
+и пользуемся  $rename чтобы переименовать название поля
+db.mongo.updateMany( 
+{},
+{ 
+$rename: { 
+name: 'fullname'
+}
+}
+)
+
+
+
+#Для того чтобы удалить одно значение используем deleteOne()  а если много
+записей то deleteMany()
+db.mongo.deleteOne({age:21})
+{ acknowledged: true, deletedCount: 1 }
+
+#Делаю одним запросом несколько операции вставить пользователя и удалить и обязательно его возвожу в список 
+для того чтобы удалить одно знчение по примерному возрасту то использую функцию  filter:
+db.mongo.bulkWrite([
+{ 
+insertOne:{
+document: {name: 'adel', age: 18}
+}
+},
+{
+deleteOne: {
+filter: {age:20}
+}
+}
+])
+
+
+
+
+#Типы связи  сущностей 
+мы добавили к сущности Адель поле  post который содержит 2 обьекта
+db.mongo.update(
+{fullname: 'adel'},
+{
+$set: {
+posts: [
+{title: 'python', text: 'best'},
+{title: 'mongo', text: 'top'},
+]
+}
+}
+)
+
+
+
+#Посмотрим обекта с помощью findOne
+db.mongo.findOne({name: 'adel'}, {post:0})
+{ _id: ObjectId("610b9653d769dfcfae322c47"),
+  name: 'adel',
+  age: 18,
+  posts: 
+   [ { title: 'python', text: 'best' },
+     { title: 'mongo', text: 'top' } ] }
+
+
+#Теперь ищем по постам чтобы найти пользователя которыый имеет по определенный постом
+
+
+db.mongo.find(
+{
+posts: {
+$elemMatch: {
+title: 'python'
+}
+}
+}
+)
+
+
+
+#Находим пользователя у которого есть посты с функцией $exists: указываю Любое
+db.mongo.find({posts:{$exists: true}})
+{ _id: ObjectId("610b9653d769dfcfae322c47"),
+  name: 'adel',
+  age: 18,
+  posts: 
+   [ { title: 'python', text: 'best' },
+     { title: 'mongo', text: 'top' } ] }
+
+
+=============================================================================
+|\      /| |'''''' '''''''''''  '''''''''      |''''|        |       |   
+| \    / | |            |       '       '      |    |        |       |
+|  \  /  | |''''''      |       '       '      |    |        |'''''| | 
+|   \/   | |            |       '       '  |''''''''''''|    |     | |
+|        | |,,,,,,      |       ',,,,,,,'  |            |    |,,,,,| |
+=============================================================================
+
+db.collection.aggregate()
+Предоставляет доступ к конвейеру агрегации .
+db.collection.bulkWrite()
+Обеспечивает функциональность операции массовой записи.
+db.collection.count()
+Обертывания countдля возврата количества документов в коллекции или представлении.
+db.collection.countDocuments()
+Завершает $groupэтап агрегирования $sum выражением, возвращающим количество документов в коллекции или представлении.
+db.collection.createIndex()
+Создает индекс для коллекции.
+db.collection.createIndexes()
+Создает один или несколько индексов для коллекции.
+db.collection.dataSize()
+Возвращает размер коллекции. Оборачивает sizeполе в выходной файл collStats.
+db.collection.deleteOne()
+Удаляет отдельный документ из коллекции.
+db.collection.deleteMany()
+Удаляет несколько документов из коллекции.
+db.collection.distinct()
+Возвращает массив документов, которые имеют разные значения для указанного поля.
+db.collection.drop()
+Удаляет указанную коллекцию из базы данных.
+db.collection.dropIndex()
+Удаляет указанный индекс из коллекции.
+db.collection.dropIndexes()
+Удаляет все индексы в коллекции.
+db.collection.ensureIndex()
+Удаленный. Используйте db.collection.createIndex().
+db.collection.estimatedDocumentCount()
+Переносит, countчтобы вернуть приблизительное количество документов в коллекции или представлении.
+db.collection.explain()
+Возвращает информацию о выполнении запроса различными методами.
+db.collection.find()
+Выполняет запрос к коллекции или представлению и возвращает объект курсора.
+db.collection.findAndModify()
+Атомарно изменяет и возвращает один документ.
+db.collection.findOne()
+Выполняет запрос и возвращает один документ.
+db.collection.findOneAndDelete()
+Находит один документ и удаляет его.
+db.collection.findOneAndReplace()
+Находит один документ и заменяет его.
+db.collection.findOneAndUpdate()
+Находит отдельный документ и обновляет его.
+db.collection.getIndexes()
+Возвращает массив документов, описывающих существующие индексы в коллекции.
+db.collection.getShardDistribution()
+Для коллекций в сегментированных кластерах db.collection.getShardDistribution()сообщает данные о распределении фрагментов .
+db.collection.getShardVersion()
+Внутренний метод диагностики сегментированного кластера.
+db.collection.hideIndex()
+Скрывает индекс от планировщика запросов.
+db.collection.insert()
+Создает новый документ в коллекции.
+db.collection.insertOne()
+Вставляет новый документ в коллекцию.
+db.collection.insertMany()
+Вставляет несколько новых документов в коллекцию.
+db.collection.isCapped()
+Сообщает, является ли коллекция закрытой .
+db.collection.latencyStats()
+Возвращает статистику задержки для коллекции.
+db.collection.mapReduce()
+Выполняет агрегирование данных в стиле сокращения карты.
+db.collection.reIndex()
+Восстанавливает все существующие индексы в коллекции.
+db.collection.remove()
+Удаляет документы из коллекции.
+db.collection.renameCollection()
+Меняет название коллекции.
+db.collection.replaceOne()
+Заменяет отдельный документ в коллекции.
+db.collection.stats()
+Отчеты о состоянии коллекции. Предоставляет оболочку для collStats.
+db.collection.storageSize()
+Сообщает общий размер, используемый коллекцией, в байтах. Предоставляет оболочку вокруг storageSizeполя collStatsвывода.
+db.collection.totalIndexSize()
+Сообщает общий размер, используемый индексами в коллекции. Предоставляет оболочку вокруг totalIndexSizeполя collStatsвывода.
+db.collection.totalSize()
+Сообщает общий размер коллекции, включая размер всех документов и всех индексов в коллекции.
+db.collection.unhideIndex()
+Показывает индекс из планировщика запросов.
+db.collection.update()
+Изменяет документ в коллекции.
+db.collection.updateOne()
+Изменяет отдельный документ в коллекции.
+db.collection.updateMany()
+Изменяет несколько документов в коллекции.
+db.collection.watch()
+Устанавливает поток изменений для коллекции.
+db.collection.validate()
+Выполняет диагностические операции с коллекцией.
+
